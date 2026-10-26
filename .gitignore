@@ -1,0 +1,24 @@
+# PlatformIO 构建产物
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# VSCode（c_cpp_properties.json 含本机绝对路径，不该提交）
+.vscode/c_cpp_properties.json
+.vscode/launch.json
+.vscode/ipch/
+.vscode/.browse.*
+
+# 编译产物
+*.o
+*.d
+*.elf
+*.bin
+*.hex
+*.map
+*.su
+
+# 系统文件
+Thumbs.db
+.DS_Store
+desktop.ini
