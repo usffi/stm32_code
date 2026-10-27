@@ -38,7 +38,7 @@ int main(void)
         }
 
     }
-   // HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13,GPIO_PIN_SET);
+    //HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13,GPIO_PIN_SET);
 
 }
 
