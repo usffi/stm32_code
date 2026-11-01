@@ -48,11 +48,11 @@ int main(void)
     // uint32_t b = 1U << 31;   /* 无符号 */
     // uint32_t c = 1U << 32;   /* 移了 32 位 */   
 
-    uint8_t flag=0U,a=1U,b=1U, x =1U; 
-    if (a)
-        CHECK();
-    else
-        other();
+    // uint8_t flag=0U,a=1U,b=1U, x =1U; 
+    // if (a)
+    //     CHECK();
+    // else
+    //     other();
 
     BIT_SET(RCC->APB2ENR,4);
     BIT_GET(RCC->APB2ENR,4);
