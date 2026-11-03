@@ -63,3 +63,4 @@ stm32_code/
 
 - `HAL_Init()` 后默认主频是 **HSI 8MHz**，不是 72MHz。手写工程没有 `SystemClock_Config()`，需要时自己补。
 - PlatformIO 手写工程需要自己实现 `SysTick_Handler()`，否则 `HAL_Delay` 会卡死。
+- 测试备注
