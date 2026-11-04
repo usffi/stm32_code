@@ -3,11 +3,10 @@
 .pioenvs/
 .piolibdeps/
 
-# VSCode（c_cpp_properties.json 含本机绝对路径，不该提交）
-.vscode/c_cpp_properties.json
-.vscode/launch.json
-.vscode/ipch/
-.vscode/.browse.*
+# VSCode：先全排除，只放行插件推荐列表
+# （c_cpp_properties.json 含本机绝对路径，launch.json 含调试器路径，都不该进仓库）
+**/.vscode/*
+!**/.vscode/extensions.json
 
 # 编译产物
 *.o
