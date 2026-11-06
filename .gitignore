@@ -23,3 +23,5 @@ Thumbs.db
 desktop.ini
 
 disasm*.txt
+# 构建日志：和 disasm 一样是快照，改了代码就过期
+build.log

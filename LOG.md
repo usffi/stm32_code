@@ -77,6 +77,33 @@
 
 ---
 
+## T07 · 2026-11-04
+
+- **做了什么**：梳理仓库现状（9 条提交体检），建 `dev`/`dev1` 分支，练 fast-forward 和 `--no-ff` 两种合并；在临时副本里制造冲突并用三轮不同方式解决（手写改写 / `checkout --ours` 试错）；`.gitignore` 改成白名单模式；README 四节对齐现状
+- **卡在哪**：
+  1. **`git merge` 方向搞反** → 站在 `dev1` 上敲 `git merge --no-ff dev1`（自己合自己），显示 `Already up to date`，以为合并了其实 main 一步没动。**判据：merge 前先 `git branch` 看星号在哪**
+  2. **`--no-ff` 弹出 vim 卡住** → Git 打开 `.git/MERGE_MSG` 等确认，不认识这个界面。解决：`Esc` → `:wq` → 回车；不如直接 `git config --global core.editor notepad` 换掉
+  3. **`.gitignore` 写错层级** → `disasm*.txt` 写进了 `t01/t01-blink/.gitignore`，而规则**只作用所在目录及子目录**，管不到 `t05/`。结果快照被二次提交进仓库
+  4. **`git rm --cached` 后又回来了** → 它只删索引，**磁盘文件还在**，下一次 `git add -A` 又把未跟踪的它们加回去。必须配合正确的 `.gitignore` 才算真删掉
+  5. **`git checkout --ours` 试错** → 验证了 X19：dev 那句改动直接消失，**没有任何报错**。解决冲突 ≠ 选边站
+- **得到什么数字**：仓库跟踪约 30 个文件，每工程忽略 3 类（`.pio/` + 2 个 json）；副本里做出 **3 个合并提交**（都是 2 个父）；提交体检 10 条——8 条干净，2 条有问题（`c2041c6` message 不合格 / `775a112` 夹带 17 个文件）
+
+---
+
+## T08 · 2026-11-06
+
+- **做了什么**：在 w64devkit 提供的 GNU Make 4.4.1 上，从零写 `t08-makefile` 的构建链——先手敲"编译 → 链接 → objcopy"三条命令（564 B），再翻译成 Makefile（`%.o: %.c` 模式规则 + `$@/$</$^`）；验证 `-nostartfiles` 必须配 `SystemInit`/`_init` 两个空桩；做"改头文件不重编"实验，再用 `-MMD -MP` + `-include` 修好；最后用 openocd 烧录验证灯在闪
+- **卡在哪**：
+  1. **把卡片的 Markdown 一起复制进了 Makefile** → 开头混进 `## 附录 B` 和 `> ⚠️ ...`，`make` 直接报 `Makefile:5: *** missing separator. Stop.`。**原因不是 Tab，是复制残留**，删掉前 7 行就好
+  2. **`make` 在 Git Bash 里找不到** → w64devkit 只在它自己的终端里设 PATH。解决：`~/.bashrc` 里把 `/d/w64devkit/bin` **追加**到 PATH，再让 `~/.bash_profile` 转发（Git Bash 是 login shell，不读 `.bashrc`）
+  3. **卡片说"改 delay.h 把 7200 改成 720"，但 7200 在 delay.c 里** → 卡片缺陷。修法：把圈数做成宏 `LOOPS_PER_MS` 放进 `delay.h`，`delay.c` 引用它——这样"改 .h 影响 .o"才成立
+  4. **改 `delay.h` 后 `make` 什么都不做** → `make: Nothing to be done for 'all'.`。根因不是编译器偷懒，是 **`delay.h` 不在依赖图里**，make 判断"不用调编译器"
+  5. **`objcopy` 只吃一个输入** → 若 `firmware.bin` 用 `$^`，多依赖时会打印 `Usage: objcopy [option(s)] in-file [out-file]`。这不是 make 语法错，是工具用法错
+  6. **Makefile 第 42 行是 Tab 开头的 `-MMD -MP #...`** → 被当成配方行挂到 `.PHONY` 上，成死代码（当时不影响运行，因为下一行另有一句正确的 `CFLAGS +=`）
+- **得到什么数字**：`text 564 B / data 0 / bss 0`（`firmware.elf` 文件 135 KB，带调试信息）；`main.o` 1148 B、`delay.o` 872 B、`startup.o` 4152 B；`_estack = 0x20005000 = 0x20000000 + 0x5000`；宏 720 vs 7200 对应 `cmp.w #720` / `#7200`；有 `printf` 时 nano 库 3348 B vs 完整库 7728 B
+
+---
+
 ## 待补的疑问
 
 - [ ] PC13 配成推挽能亮，但手册建议开漏（3mA 限制）。想对比一下两种模式的实际差异
