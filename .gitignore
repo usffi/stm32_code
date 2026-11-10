@@ -16,6 +16,7 @@
 *.hex
 *.map
 *.su
+*.exe
 
 # 系统文件
 Thumbs.db
